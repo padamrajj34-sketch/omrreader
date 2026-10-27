@@ -86,7 +86,14 @@ def rectify_sheet(image):
         if len(polygon)==4 and cv2.contourArea(polygon)>search.shape[0]*search.shape[1]*.35:
             corners=polygon.reshape(4,2).astype(np.float32)/scale; break
     if corners is None: return image
-    src=order_points(corners); width,height=1000,1414
+    src=order_points(corners)
+    frame=np.array([[0,0],[w-1,0],[w-1,h-1],[0,h-1]],dtype=np.float32)
+    offsets=np.abs(src-frame)
+    frame_aligned=np.max(offsets[:,0])<=w*.04 and np.max(offsets[:,1])<=h*.04
+    calibrated_aspect=828/1171
+    if frame_aligned and abs(w/h-calibrated_aspect)<=.02:
+        return image
+    width,height=1000,1414
     dst=np.array([[0,0],[width-1,0],[width-1,height-1],[0,height-1]],dtype=np.float32)
     return cv2.warpPerspective(image,cv2.getPerspectiveTransform(src,dst),(width,height))
 
