@@ -43,7 +43,7 @@ def read_test(test_id: str) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 @app.get("/api/health")
-def health(): return {"status": "ok", "scanner": "kathmandu-100-v1"}
+def health(): return {"status": "ok", "scanner": "kathmandu-100-v2"}
 
 @app.get("/api/tests")
 def list_tests():
